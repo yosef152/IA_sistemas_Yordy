@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>AG — TSP Región Puno</title>
+
+    <!-- Google Fonts: Syne (display) + DM Sans (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     SIDEBAR — controles + resultados
+══════════════════════════════════════════════ -->
+<aside class="sidebar">
+
+    <!-- Encabezado -->
+    <header class="sidebar__header">
+        <div class="logo-badge">AG</div>
+        <div>
+            <h1 class="sidebar__title">Algoritmo Genético</h1>
+            <p class="sidebar__subtitle">TSP — Región Puno</p>
+        </div>
+    </header>
+
+    <!-- Configuración del AG -->
+    <section class="card">
+        <h2 class="card__label">Parámetros del Algoritmo</h2>
+
+        <div class="field">
+            <label class="field__label" for="ciudadOrigen">
+                <span class="dot dot--origin"></span> Ciudad de inicio / retorno
+            </label>
+            <select id="ciudadOrigen" class="field__select">
+                <option value="">— Seleccionar —</option>
+            </select>
+        </div>
+
+        <div class="param-grid">
+            <div class="field">
+                <label class="field__label" for="tamPoblacion">Población</label>
+                <input id="tamPoblacion" class="field__input" type="number" value="80" min="10" max="300"/>
+            </div>
+            <div class="field">
+                <label class="field__label" for="numGeneraciones">Generaciones</label>
+                <input id="numGeneraciones" class="field__input" type="number" value="200" min="10" max="1000"/>
+            </div>
+            <div class="field">
+                <label class="field__label" for="tasaMutacion">Mutación %</label>
+                <input id="tasaMutacion" class="field__input" type="number" value="15" min="1" max="60"/>
+            </div>
+            <div class="field">
+                <label class="field__label" for="tasaCruce">Cruce %</label>
+                <input id="tasaCruce" class="field__input" type="number" value="85" min="10" max="100"/>
+            </div>
+        </div>
+
+        <button id="btnEjecutar" class="btn-run" onclick="ejecutarAG()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="18" height="18">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            Ejecutar Algoritmo Genético
+        </button>
+    </section>
+
+    <!-- Leyenda -->
+    <section class="card">
+        <h2 class="card__label">Leyenda</h2>
+        <ul class="legend">
+            <li><span class="dot dot--origin"></span> Ciudad origen / destino</li>
+            <li><span class="dot dot--route"></span> Ruta óptima TSP</li>
+            <li><span class="dot dot--city"></span> Ciudades intermedias</li>
+            <li><span class="dot dot--explore"></span> Evaluando ruta</li>
+        </ul>
+    </section>
+
+    <!-- Resultados -->
+    <section class="card result-card" id="resultPanel" style="display:none">
+        <h2 class="card__label">Mejor Solución</h2>
+
+        <div class="result-distance">
+            <span class="result-distance__num" id="distanciaTotal">0</span>
+            <span class="result-distance__unit">km</span>
+        </div>
+
+        <div class="result-meta">
+            <div class="meta-item">
+                <span class="meta-label">Generación</span>
+                <span class="meta-val" id="generacionMejora">—</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Fitness</span>
+                <span class="meta-val" id="fitnessValor">—</span>
+            </div>
+        </div>
+
+        <div class="result-path-label">Ruta completa (ciclo)</div>
+        <div class="result-path" id="rutaTexto"></div>
+    </section>
+
+    <!-- Evolución de fitness -->
+    <section class="card" id="evolucionPanel" style="display:none">
+        <h2 class="card__label">Evolución del Fitness</h2>
+        <canvas id="evolucionCanvas" width="280" height="100"></canvas>
+    </section>
+
+    <!-- Pasos / Generaciones -->
+    <section class="card steps-card" id="stepsPanel" style="display:none">
+        <h2 class="card__label">Paso a Paso — Generaciones</h2>
+        <ol class="steps-list" id="stepsList"></ol>
+    </section>
+
+    <!-- Tabla de distancias -->
+    <section class="card">
+        <h2 class="card__label">Matriz de distancias (km)</h2>
+        <table class="graph-table" id="graphTable"></table>
+    </section>
+
+</aside>
+
+<!-- ══════════════════════════════════════════════
+     MAPA
+══════════════════════════════════════════════ -->
+<main class="map-wrapper">
+    <div id="map"></div>
+
+    <!-- Chip flotante de estado -->
+    <div class="map-chip" id="mapChip" style="display:none"></div>
+
+    <!-- Panel de progreso durante ejecución -->
+    <div class="progress-panel" id="progressPanel" style="display:none">
+        <div class="progress-label" id="progressLabel">Generación 0 / 0</div>
+        <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+        <div class="progress-best" id="progressBest">Mejor: — km</div>
+    </div>
+</main>
+
+
+<!-- Google Maps API — reemplaza TU_API_KEY con tu clave real -->
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY&callback=initMap&libraries=geometry"
+    async defer>
+</script>
+
+<script src="script.js"></script>
+</body>
+</html>
